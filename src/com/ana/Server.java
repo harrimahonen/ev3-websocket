@@ -24,7 +24,7 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-        //conn.send("Welcome to the server!"); //This method sends a message to the new client
+        conn.send("Welcome to the server!"); //This method sends a message to the new client
         //broadcast( "new connection: " + handshake.getResourceDescriptor() ); //This method sends a message to all clients connected
         System.out.println( conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered" );
     }
@@ -37,12 +37,17 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onMessage( WebSocket conn, String message ) {
-        System.out.println( conn + ": " + message );
+        System.out.println( conn + " : "+message );
+        if(message.equals("UP")){
+            System.out.println("Move UP!");
+            conn.send("GREEN");
+        }
     }
     @Override
     public void onMessage( WebSocket conn, ByteBuffer message ) {
         //broadcast( message.array() );
         System.out.println( conn + ": " + message );
+
     }
 
 
@@ -52,6 +57,7 @@ public class Server extends WebSocketServer {
         try {
             port = Integer.parseInt( args[ 0 ] );
         } catch ( Exception ex ) {
+            System.out.println("error" + ex);
         }
         Server s = new Server( port );
         s.start();
@@ -71,8 +77,7 @@ public class Server extends WebSocketServer {
     public void onError( WebSocket conn, Exception ex ) {
         ex.printStackTrace();
         if( conn != null ) {
-            // some errors like port binding failed may not be assignable to a specific websocket
-        }
+            System.out.println("Error!");        }
     }
 
     @Override
